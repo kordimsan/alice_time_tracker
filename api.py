@@ -1,15 +1,9 @@
-# coding: utf-8
-# Импортирует поддержку UTF-8.
-from __future__ import unicode_literals
 
-# Импортируем модули для работы с JSON и логами.
-import json
 import logging
 
 # Импортируем подмодули Flask для запуска веб-сервиса.
-from flask import Flask, request
-app = Flask(__name__)
-
+from fastapi import FastAPI, Body
+app = FastAPI()
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -17,29 +11,24 @@ logging.basicConfig(level=logging.DEBUG)
 sessionStorage = {}
 
 # Задаем параметры приложения Flask.
-@app.route("/", methods=['POST'])
-
-def main():
+@app.post("/")
+async def main(request = Body(...)):
 # Функция получает тело запроса и возвращает ответ.
-    logging.info('Request: %r', request.json)
+    logging.info('Request: %r', request)
 
     response = {
-        "version": request.json['version'],
-        "session": request.json['session'],
+        "version": request['version'],
+        "session": request['session'],
         "response": {
             "end_session": False
         }
     }
 
-    handle_dialog(request.json, response)
+    handle_dialog(request, response)
 
     logging.info('Response: %r', response)
 
-    return json.dumps(
-        response,
-        ensure_ascii=False,
-        indent=2
-    )
+    return response
 
 # Функция для непосредственной обработки диалога.
 def handle_dialog(req, res):
