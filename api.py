@@ -1,8 +1,8 @@
-
 import logging
 
 # Импортируем подмодули Flask для запуска веб-сервиса.
 from fastapi import FastAPI, Body
+
 app = FastAPI()
 
 logging.basicConfig(level=logging.DEBUG)
@@ -12,82 +12,81 @@ sessionStorage = {}
 
 # Задаем параметры приложения Flask.
 @app.post("/")
-async def main(request = Body(...)):
-# Функция получает тело запроса и возвращает ответ.
-    logging.info('Request: %r', request)
+async def main(request=Body(...)):
+    # Функция получает тело запроса и возвращает ответ.
+    logging.info("Request: %r", request)
 
     response = {
-        "version": request['version'],
-        "session": request['session'],
-        "response": {
-            "end_session": False
-        }
+        "version": request["version"],
+        "session": request["session"],
+        "response": {"end_session": False},
     }
 
     handle_dialog(request, response)
 
-    logging.info('Response: %r', response)
+    logging.info("Response: %r", response)
 
     return response
 
+
 # Функция для непосредственной обработки диалога.
 def handle_dialog(req, res):
-    user_id = req['session']['user_id']
+    user_id = req["session"]["user_id"]
 
-    if req['session']['new']:
+    if req["session"]["new"]:
         # Это новый пользователь.
         # Инициализируем сессию и поприветствуем его.
 
         sessionStorage[user_id] = {
-            'suggests': [
+            "suggests": [
                 "Не хочу.",
                 "Не буду.",
                 "Отстань!",
             ]
         }
 
-        res['response']['text'] = 'Привет! Купи слона!'
-        res['response']['buttons'] = get_suggests(user_id)
+        res["response"]["text"] = "Привет! Купи слона!"
+        res["response"]["buttons"] = get_suggests(user_id)
         return
 
     # Обрабатываем ответ пользователя.
-    if req['request']['original_utterance'].lower() in [
-        'ладно',
-        'куплю',
-        'покупаю',
-        'хорошо',
+    if req["request"]["original_utterance"].lower() in [
+        "ладно",
+        "куплю",
+        "покупаю",
+        "хорошо",
     ]:
         # Пользователь согласился, прощаемся.
-        res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
+        res["response"]["text"] = "Слона можно найти на Яндекс.Маркете!"
         return
 
     # Если нет, то убеждаем его купить слона!
-    res['response']['text'] = 'Все говорят "%s", а ты купи слона!' % (
-        req['request']['original_utterance']
+    res["response"]["text"] = 'Все говорят "%s", а ты купи слона!' % (
+        req["request"]["original_utterance"]
     )
-    res['response']['buttons'] = get_suggests(user_id)
+    res["response"]["buttons"] = get_suggests(user_id)
+
 
 # Функция возвращает две подсказки для ответа.
 def get_suggests(user_id):
     session = sessionStorage[user_id]
 
     # Выбираем две первые подсказки из массива.
-    suggests = [
-        {'title': suggest, 'hide': True}
-        for suggest in session['suggests'][:2]
-    ]
+    suggests = [{"title": suggest, "hide": True} for suggest in session["suggests"][:2]]
 
     # Убираем первую подсказку, чтобы подсказки менялись каждый раз.
-    session['suggests'] = session['suggests'][1:]
+    session["suggests"] = session["suggests"][1:]
     sessionStorage[user_id] = session
 
     # Если осталась только одна подсказка, предлагаем подсказку
     # со ссылкой на Яндекс.Маркет.
     if len(suggests) < 2:
-        suggests.append({
-            "title": "Ладно",
-            "url": "https://market.yandex.ru/search?text=слон",
-            "hide": True
-        })
+        suggests.append(
+            {
+                "title": "Ладно",
+                "url": "https://market.yandex.ru/search?text=слон",
+                "hide": True,
+            }
+        )
 
     return suggests
