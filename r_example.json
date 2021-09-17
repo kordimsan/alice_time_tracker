@@ -1,0 +1,71 @@
+{
+  "Response": {
+    "version": "1.0",
+    "session": {
+      "message_id": 0,
+      "session_id": "cf11887a-17ef-4a04-82aa-bcb62c0eb836",
+      "skill_id": "e0556288-577a-4c0a-bbe9-70ba4e3b0bc7",
+      "user": {
+        "user_id": "89B24CE88D956A686CC78066B30D029077047237DA73AA294D76470C699A4B5D"
+      },
+      "application": {
+        "application_id": "B54D5F84324A6405FDDDBFE8D1F2E01E1B8B491307FD7825CB1607E2F57C85F9"
+      },
+      "new": true,
+      "user_id": "B54D5F84324A6405FDDDBFE8D1F2E01E1B8B491307FD7825CB1607E2F57C85F9"
+    },
+    "response": {
+      "end_session": false,
+      "text": "Привет! Купи слона!",
+      "buttons": [
+        {
+          "title": "Не хочу.",
+          "hide": true
+        },
+        {
+          "title": "Не буду.",
+          "hide": true
+        }
+      ]
+    }
+  },
+  "Request": {
+    "meta": {
+      "locale": "ru-RU",
+      "timezone": "UTC",
+      "client_id": "ru.yandex.searchplugin/7.16 (none none; android 4.4.2)",
+      "interfaces": {
+        "screen": {},
+        "payments": {},
+        "account_linking": {}
+      }
+    },
+    "session": {
+      "message_id": 0,
+      "session_id": "cf11887a-17ef-4a04-82aa-bcb62c0eb836",
+      "skill_id": "e0556288-577a-4c0a-bbe9-70ba4e3b0bc7",
+      "user": {
+        "user_id": "89B24CE88D956A686CC78066B30D029077047237DA73AA294D76470C699A4B5D"
+      },
+      "application": {
+        "application_id": "B54D5F84324A6405FDDDBFE8D1F2E01E1B8B491307FD7825CB1607E2F57C85F9"
+      },
+      "new": true,
+      "user_id": "B54D5F84324A6405FDDDBFE8D1F2E01E1B8B491307FD7825CB1607E2F57C85F9"
+    },
+    "request": {
+      "command": "",
+      "original_utterance": "",
+      "nlu": {
+        "tokens": [],
+        "entities": [],
+        "intents": {}
+      },
+      "markup": {
+        "dangerous_context": false
+      },
+      "type": "SimpleUtterance"
+    },
+    "version": "1.0"
+  }
+}
