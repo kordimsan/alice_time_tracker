@@ -9,6 +9,7 @@ python = "3.10.0"
 fastapi = "^0.68.1"
 Flask = "0.12.2"
 uvicorn = "^0.15.0"
+dialogic = "^0.3.18"
 
 [tool.poetry.dev-dependencies]
 black = "^21.11b1"
