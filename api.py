@@ -12,17 +12,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 @app.post("/")
 async def main(request: AliceRequest = Body(...)):  # noqa
-    # Функция получает тело запроса и возвращает ответ.
     logging.info("Request: %r", request)
-    request = request.dict()
-    response = {
-        "version": request["version"],
-        "session": request["session"],
-        "response": {"end_session": False},
-    }
-
-    handle_dialog(request, response)
-
+    response = handle_dialog(request)
     logging.info("Response: %r", response)
-
     return response
