@@ -10,7 +10,6 @@ app = FastAPI()
 logging.basicConfig(level=logging.DEBUG)
 
 
-# Задаем параметры приложения FastAPI.
 @app.post("/")
 async def main(request: AliceRequest = Body(...)):  # noqa
     # Функция получает тело запроса и возвращает ответ.

@@ -1,8 +1,6 @@
-# Хранилище данных о сессиях.
 sessionStorage = {}
 
 
-# Функция для непосредственной обработки диалога.
 def handle_dialog(req, res):
     user_id = req["session"]["user_id"]
 
@@ -35,7 +33,6 @@ def handle_dialog(req, res):
     res["response"]["buttons"] = get_suggests(user_id)
 
 
-# Функция возвращает две подсказки для ответа.
 def get_suggests(user_id):
     session = sessionStorage[user_id]
 
