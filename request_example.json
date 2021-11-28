@@ -10,8 +10,8 @@
     }
   },
   "session": {
-    "message_id": 0,
-    "session_id": "cf11887a-17ef-4a04-82aa-bcb62c0eb836",
+    "message_id": 1,
+    "session_id": "5220972c-20dc-4708-8d47-7db97107dcbb",
     "skill_id": "e0556288-577a-4c0a-bbe9-70ba4e3b0bc7",
     "user": {
       "user_id": "89B24CE88D956A686CC78066B30D029077047237DA73AA294D76470C699A4B5D"
@@ -19,21 +19,39 @@
     "application": {
       "application_id": "B54D5F84324A6405FDDDBFE8D1F2E01E1B8B491307FD7825CB1607E2F57C85F9"
     },
-    "new": true,
-    "user_id": "B54D5F84324A6405FDDDBFE8D1F2E01E1B8B491307FD7825CB1607E2F57C85F9"
+    "user_id": "B54D5F84324A6405FDDDBFE8D1F2E01E1B8B491307FD7825CB1607E2F57C85F9",
+    "new": false
   },
   "request": {
-    "command": "",
-    "original_utterance": "",
+    "command": "добавь задачу написать тайм трекер",
+    "original_utterance": "добавь задачу написать тайм трекер",
     "nlu": {
-      "tokens": [],
+      "tokens": ["добавь", "задачу", "написать", "тайм", "трекер"],
       "entities": [],
-      "intents": {}
+      "intents": {
+        "add_task": {
+          "slots": {
+            "task_name": {
+              "type": "YANDEX.STRING",
+              "tokens": {
+                "start": 2,
+                "end": 5
+              },
+              "value": "написать тайм трекер"
+            }
+          }
+        }
+      }
     },
     "markup": {
       "dangerous_context": false
     },
     "type": "SimpleUtterance"
+  },
+  "state": {
+    "session": {},
+    "user": {},
+    "application": {}
   },
   "version": "1.0"
 }
