@@ -1,51 +1,68 @@
-from models.request import AliceRequest
+from models.request import AliceRequest, Task, UserState
+from models.response import Response
 
 sessionStorage = {}
 
 
-def handle_dialog(req: AliceRequest):
-    res = {
-        "version": req.version,
-        "session": req.session,
-        "response": {"end_session": False},
-    }
-
+def handle_dialog(req: AliceRequest) -> tuple:
     user_id = req.session.user_id
+    tasks = req.state.user.tasks
 
     if req.session.new:
-        # Это новый пользователь.
-        # Инициализируем сессию и поприветствуем его.
-        sessionStorage[user_id] = {"suggests": ["Не хочу.", "Не буду.", "Отстань!"]}
+        return (
+            Response(
+                text="Привет! Купи слона!",
+                buttons=get_suggests(user_id),
+            ),
+            UserState(tasks=tasks),
+        )
 
-        res["response"]["text"] = "Привет! Купи слона!"
-        res["response"]["tts"] = "Привет! Купи слона!"
-        res["response"]["buttons"] = get_suggests(user_id)
-        return res
+    if req.request.nlu.intents.add_task:
+        task_name = req.request.nlu.intents.add_task.slots.task_name.value
+        tasks.append(Task(name=task_name))
+        return (
+            Response(text=f"Задача {task_name} начата!"),
+            UserState(tasks=tasks),
+        )
 
-    # Обрабатываем ответ пользователя.
-    if req.request.original_utterance.lower() in [
-        "ладно",
-        "куплю",
-        "покупаю",
-        "хорошо",
-    ]:
-        # Пользователь согласился, прощаемся.
-        res["response"]["text"] = "Слона можно найти на Яндекс.Маркете!"
-        return res
+    if req.request.nlu.intents.pause_task:
+        tasks.append(Task(name="stop_any_task"))
+        return (
+            Response(text="Задача остановлена!"),
+            UserState(tasks=tasks),
+        )
 
-    # Если нет, то убеждаем его купить слона!
-    res["response"]["text"] = 'Все говорят "%s", а ты купи слона!' % (
-        req.request.original_utterance
-    )
-    res["response"]["buttons"] = get_suggests(user_id)
+    if req.request.nlu.intents.resume_task:
+        tasks.append(Task(name="stop_any_task"))
+        return (
+            Response(text="Продолжаем задачу!"),
+            UserState(tasks=tasks),
+        )
 
-    return res
+    if req.request.nlu.intents.result_task:
+        return (
+            Response(text="Результат задачи!"),
+            UserState(tasks=tasks),
+        )
+
+    if req.request.nlu.intents.results:
+        return (
+            Response(text="Результат задачи!"),
+            UserState(tasks=tasks),
+        )
+
+
+def get_user(user_id):
+    if user_id not in sessionStorage:
+        sessionStorage[user_id] = {
+            "tasks": [],
+            "suggests": ["Начни задачу"],
+        }
+    return sessionStorage[user_id]
 
 
 def get_suggests(user_id):
-    session = sessionStorage[user_id]
-
-    # Выбираем две первые подсказки из массива.
+    session = get_user(user_id)
     suggests = [{"title": suggest, "hide": True} for suggest in session["suggests"][:2]]
 
     # Убираем первую подсказку, чтобы подсказки менялись каждый раз.

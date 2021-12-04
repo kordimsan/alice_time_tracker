@@ -14,6 +14,12 @@ logging.basicConfig(level=logging.DEBUG)
 @app.post("/", response_model=AliceResponse)
 async def main(request: AliceRequest = Body(...)):  # noqa
     logging.info("Request: %r", request)
-    response = handle_dialog(request)
-    logging.info("Response: %r", response)
-    return response
+
+    response, tasks = handle_dialog(request)
+
+    return AliceResponse(
+        response=response,
+        session=request.session,
+        user_state_update=tasks,
+        version=request.version,
+    )

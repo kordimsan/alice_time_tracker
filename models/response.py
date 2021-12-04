@@ -4,9 +4,11 @@
 
 from __future__ import annotations
 
-from typing import List
+from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
+
+from models.custom import UserState
 
 
 class User(BaseModel):
@@ -33,12 +35,20 @@ class Button(BaseModel):
 
 
 class Response(BaseModel):
-    end_session: bool
+    end_session: bool = False
     text: str
+    tts: str = None
     buttons: List[Button] = []
+
+    @validator("tts", pre=True, always=True)
+    def default_tts(cls, v, *, values, **kwargs):
+        return v or values["text"]
 
 
 class AliceResponse(BaseModel):
-    version: str
-    session: Session
     response: Response
+    session: Session
+    session_state: Optional[dict]
+    user_state_update: Optional[UserState]
+    application_state: Optional[dict]
+    version: str

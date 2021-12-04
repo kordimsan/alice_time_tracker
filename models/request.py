@@ -8,6 +8,8 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 
+from models.custom import UserState
+
 
 class Interfaces(BaseModel):
     screen: Dict[str, Any]
@@ -45,10 +47,32 @@ class Tokens(BaseModel):
     end: int
 
 
+class TaskName(BaseModel):
+    type: str
+    tokens: Tokens
+    value: str
+
+
+class Slots(BaseModel):
+    task_name: Optional[TaskName]
+
+
+class IntentSlots(BaseModel):
+    slots: Slots
+
+
+class Intents(BaseModel):
+    add_task: Optional[IntentSlots]
+    pause_task: Optional[IntentSlots]
+    result_task: Optional[IntentSlots]
+    results: Optional[IntentSlots]
+    resume_task: Optional[IntentSlots]
+
+
 class Nlu(BaseModel):
     tokens: List[str]
     entities: List
-    intents: Dict[str, Any]
+    intents: Optional[Intents]
 
 
 class Markup(BaseModel):
@@ -65,13 +89,13 @@ class Request(BaseModel):
 
 class State(BaseModel):
     session: Dict[str, Any]
-    user: Dict[str, Any]
+    user: Optional[UserState]
     application: Dict[str, Any]
 
 
 class AliceRequest(BaseModel):
     meta: Meta
-    session: Session
     request: Request
+    session: Session
     state: Optional[State]
     version: str
