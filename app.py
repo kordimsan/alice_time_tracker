@@ -1,4 +1,5 @@
-from models.request import AliceRequest, Task, UserState
+from models.custom import Task
+from models.request import AliceRequest, UserState
 from models.response import Response
 
 sessionStorage = {}
