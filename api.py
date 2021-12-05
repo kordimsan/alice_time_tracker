@@ -1,7 +1,6 @@
 import logging
 import os
 
-from devtools import debug
 from fastapi import Body, FastAPI
 from logtail import LogtailHandler
 
@@ -25,7 +24,6 @@ async def check_api():
 
 @app.post("/", response_model=AliceResponse)
 async def main(request: AliceRequest = Body(...)):  # noqa
-    debug(request)
     logger.info("Request: %r", request)
 
     response, tasks = handle_dialog(request)
