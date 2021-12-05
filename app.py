@@ -62,8 +62,9 @@ def handle_dialog(req: AliceRequest) -> tuple:
         )
 
     if req.request.nlu.intents.results:
+        tasks_list = {t.name for t in tasks if t.name not in ["stop_any_task"]}
         return (
-            Response(text=f"Ваши задачи: {', '.join({t.name for t in tasks})}"),
+            Response(text=f"Ваши задачи: {', '.join(tasks_list)}"),
             UserState(tasks=tasks),
         )
 
