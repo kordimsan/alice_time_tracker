@@ -31,7 +31,7 @@ class Session(BaseModel):
 
 class Button(BaseModel):
     title: str
-    hide: bool
+    hide: bool = True
 
 
 class Response(BaseModel):

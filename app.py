@@ -1,13 +1,11 @@
 from models.custom import Task
 from models.request import AliceRequest, UserState
-from models.response import Response
+from models.response import Button, Response
 
 sessionStorage = {}
 
 
 def handle_dialog(req: AliceRequest) -> tuple:
-    user_id = req.session.user_id
-
     if not req.state.user:
         return (
             Response(text="Дима, тут что то не так с состоянием пользователя!"),
@@ -19,16 +17,11 @@ def handle_dialog(req: AliceRequest) -> tuple:
     if req.session.new:
         return (
             Response(
-                text=(
-                    "Привет! Я виртуальный тайм-трекер!\n"
-                    "Я могу отслеживать время задач над которыми вы работаете,"
-                    "просто скажи запусти задачу и кратко назови название задачи"
-                    "и я запомню время ее начала, затем можешь сказать останови"
-                    "или поставь на паузу текущую задачу,"
-                    "либо скажи что начинаешь новую задачу,"
-                    "я начну считать ее время."
-                ),
-                buttons=get_suggests(user_id),
+                text="Привет! Я виртуальный тайм-трекер!",
+                buttons=[
+                    Button(title="Начинаю задачу"),
+                    Button(title="Результат"),
+                ],
             ),
             UserState(tasks=tasks),
         )
@@ -69,37 +62,19 @@ def handle_dialog(req: AliceRequest) -> tuple:
         )
 
     return (
-        Response(text="Дима, я не понимаю!"),
+        Response(
+            text=(
+                "Я могу отслеживать время задач над которыми вы работаете, "
+                "просто скажи запусти задачу и кратко назови название задачи "
+                "и я запомню время ее начала, затем можешь сказать останови "
+                "или поставь на паузу текущую задачу, "
+                "либо скажи что начинаешь новую задачу, "
+                "я начну считать ее время."
+            ),
+            buttons=[
+                Button(title="Начинаю задачу"),
+                Button(title="Результат"),
+            ],
+        ),
         UserState(tasks=tasks),
     )
-
-
-def get_user(user_id):
-    if user_id not in sessionStorage:
-        sessionStorage[user_id] = {
-            "tasks": [],
-            "suggests": ["Начни задачу"],
-        }
-    return sessionStorage[user_id]
-
-
-def get_suggests(user_id):
-    session = get_user(user_id)
-    suggests = [{"title": suggest, "hide": True} for suggest in session["suggests"][:2]]
-
-    # Убираем первую подсказку, чтобы подсказки менялись каждый раз.
-    session["suggests"] = session["suggests"][1:]
-    sessionStorage[user_id] = session
-
-    # Если осталась только одна подсказка, предлагаем подсказку
-    # со ссылкой на Яндекс.Маркет.
-    if len(suggests) < 2:
-        suggests.append(
-            {
-                "title": "Ладно",
-                "url": "https://market.yandex.ru/search?text=слон",
-                "hide": True,
-            }
-        )
-
-    return suggests
