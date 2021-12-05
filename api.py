@@ -11,6 +11,11 @@ app = FastAPI()
 logging.basicConfig(level=logging.DEBUG)
 
 
+@app.get("/")
+async def check_api():
+    return "Task tracker has deployed!"
+
+
 @app.post("/", response_model=AliceResponse)
 async def main(request: AliceRequest = Body(...)):  # noqa
     logging.info("Request: %r", request)
