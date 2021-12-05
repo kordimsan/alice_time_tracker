@@ -26,7 +26,7 @@ def handle_dialog(req: AliceRequest) -> tuple:
                     "и я запомню время ее начала, затем можешь сказать останови"
                     "или поставь на паузу текущую задачу,"
                     "либо скажи что начинаешь новую задачу,"
-                    "я начну считать время по новой задаче."
+                    "я начну считать ее время."
                 ),
                 buttons=get_suggests(user_id),
             ),
@@ -63,7 +63,7 @@ def handle_dialog(req: AliceRequest) -> tuple:
 
     if req.request.nlu.intents.results:
         return (
-            Response(text="Результат задачи!"),
+            Response(text=f"Ваши задачи: {', '.join([t['name'] for t in tasks])}"),
             UserState(tasks=tasks),
         )
 
