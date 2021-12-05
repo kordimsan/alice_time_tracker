@@ -13,3 +13,4 @@ poetry.lock
 .pre-commit-config.yaml
 .isort.cfg
 .flake8
+.env
