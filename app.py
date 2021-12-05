@@ -63,7 +63,7 @@ def handle_dialog(req: AliceRequest) -> tuple:
 
     if req.request.nlu.intents.results:
         return (
-            Response(text=f"Ваши задачи: {', '.join([t['name'] for t in tasks])}"),
+            Response(text=f"Ваши задачи: {', '.join({t.name for t in tasks})}"),
             UserState(tasks=tasks),
         )
 
