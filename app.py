@@ -60,6 +60,11 @@ def handle_dialog(req: AliceRequest) -> tuple:
             UserState(tasks=tasks),
         )
 
+    return (
+        Response(text="Дима, я не понимаю!"),
+        UserState(tasks=tasks),
+    )
+
 
 def get_user(user_id):
     if user_id not in sessionStorage:
