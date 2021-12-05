@@ -12,9 +12,9 @@ from models.custom import UserState
 
 
 class Interfaces(BaseModel):
-    screen: Dict[str, Any]
-    payments: Dict[str, Any]
-    account_linking: Dict[str, Any]
+    screen: Dict[str, Any] = {}
+    payments: Dict[str, Any] = {}
+    account_linking: Dict[str, Any] = {}
 
 
 class Meta(BaseModel):
