@@ -7,6 +7,13 @@ sessionStorage = {}
 
 def handle_dialog(req: AliceRequest) -> tuple:
     user_id = req.session.user_id
+
+    if not req.state.user:
+        return (
+            Response(text="Дима, тут что то не так с состоянием пользователя!"),
+            UserState(),
+        )
+
     tasks = req.state.user.tasks
 
     if req.session.new:

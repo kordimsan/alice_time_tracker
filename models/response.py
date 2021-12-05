@@ -23,7 +23,7 @@ class Session(BaseModel):
     message_id: int
     session_id: str
     skill_id: str
-    user: User
+    user: Optional[User]
     application: Application
     new: bool
     user_id: str
