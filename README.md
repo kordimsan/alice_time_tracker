@@ -1,6 +1,7 @@
 # alice_time_tracker
 
 # DEBUG in VSCODE
+```
 {
   "version": "0.2.0",
   "configurations": [
@@ -14,3 +15,4 @@
     }
   ]
 }
+```
