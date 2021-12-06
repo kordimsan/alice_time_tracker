@@ -1,4 +1,4 @@
-# alice_time_tracker
+# Alice Time Tracker
 
 # DEBUG in VSCODE
 ```
