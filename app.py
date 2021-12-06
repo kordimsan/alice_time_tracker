@@ -37,7 +37,6 @@ def handle_dialog(req: AliceRequest) -> tuple:
         if last_task == "stop_any_tasks":
             last_task = tasks[-2]
 
-
         tasks.append(Task(name=last_task))
         return (
             Response(text=f"Продолжаем задачу {last_task}!"),
