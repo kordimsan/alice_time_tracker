@@ -17,18 +17,6 @@ def handle_dialog(req: AliceRequest) -> tuple:
 
     tasks = req.state.user.tasks
 
-    if req.session.new:
-        return (
-            Response(
-                text="Привет! Я виртуальный тайм-трекер!",
-                buttons=[
-                    Button(title="Начинаю задачу"),
-                    Button(title="Результат"),
-                ],
-            ),
-            UserState(tasks=tasks),
-        )
-
     if req.request.nlu.intents.add_task:
         task_name = req.request.nlu.intents.add_task.slots.task_name.value
         tasks.append(Task(name=task_name))
@@ -57,7 +45,11 @@ def handle_dialog(req: AliceRequest) -> tuple:
             UserState(tasks=tasks),
         )
 
-    if req.request.nlu.intents.results:
+    if (
+        req.request.nlu.intents.results
+        or "результат" in req.request.original_utterance
+        or "результат" in req.request.command
+    ):
         tasks_list = [t.dict() for t in tasks] + [
             {"name": None, "date_time": datetime.utcnow()}
         ]
@@ -84,6 +76,18 @@ def handle_dialog(req: AliceRequest) -> tuple:
 
         return (
             Response(text=f"Ваши задачи: {', '.join(task_texts)}"),
+            UserState(tasks=tasks),
+        )
+
+    if req.session.new:
+        return (
+            Response(
+                text="Привет! Я виртуальный тайм-трекер!",
+                buttons=[
+                    Button(title="Начинаю задачу"),
+                    Button(title="Результат"),
+                ],
+            ),
             UserState(tasks=tasks),
         )
 

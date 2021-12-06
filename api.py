@@ -1,4 +1,5 @@
 import logging
+from pprint import pprint
 
 from fastapi import Body, FastAPI
 
@@ -18,7 +19,7 @@ async def check_api():
 
 @app.post("/", response_model=AliceResponse)
 async def main(request: AliceRequest = Body(...)):  # noqa
-    logging.info("Request: %r", request)
+    pprint(request)
 
     response, tasks = handle_dialog(request)
 
