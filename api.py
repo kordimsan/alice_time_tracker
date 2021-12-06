@@ -8,7 +8,7 @@ from models.response import AliceResponse
 
 app = FastAPI()
 
-logging.setLevel(logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 
 @app.get("/")
