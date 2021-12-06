@@ -11,7 +11,7 @@ sessionStorage = {}
 def handle_dialog(req: AliceRequest) -> tuple:
     if not req.state.user:
         return (
-            Response(text="Дима, тут что то не так с состоянием пользователя!"),
+            Response(text="Дима, что то не так с состоянием пользователя!"),
             UserState(),
         )
 
@@ -28,14 +28,19 @@ def handle_dialog(req: AliceRequest) -> tuple:
     if req.request.nlu.intents.pause_task:
         tasks.append(Task(name="stop_any_task"))
         return (
-            Response(text="Задача остановлена!"),
+            Response(text=f"Задача {tasks[-1]} остановлена!"),
             UserState(tasks=tasks),
         )
 
     if req.request.nlu.intents.resume_task:
-        tasks.append(Task(name="stop_any_task"))
+        last_task = tasks[-1]
+        if last_task == "stop_any_tasks":
+            last_task = tasks[-2]
+
+
+        tasks.append(Task(name=last_task))
         return (
-            Response(text="Продолжаем задачу!"),
+            Response(text=f"Продолжаем задачу {last_task}!"),
             UserState(tasks=tasks),
         )
 
