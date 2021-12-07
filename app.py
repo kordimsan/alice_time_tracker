@@ -26,15 +26,22 @@ def handle_dialog(req: AliceRequest) -> tuple:
         )
 
     if req.request.nlu.intents.pause_task:
-        tasks.append(Task(name="stop_any_task"))
-        return (
-            Response(text=f"Задача {tasks[-2].name} остановлена!"),
-            UserState(tasks=tasks),
+        task_name = tasks[-1].name
+        if task_name == "stop_any_task":
+            return (
+                Response(text=f"Задача {tasks[-2].name} уже остановлена!"),
+                UserState(tasks=tasks),
+            )
+        else:
+            tasks.append(Task(name="stop_any_task"))
+            return (
+                Response(text=f"Задача {tasks[-2].name} остановлена!"),
+                UserState(tasks=tasks),
         )
 
     if req.request.nlu.intents.resume_task:
         last_task = tasks[-1].name
-        if last_task == "stop_any_tasks":
+        if last_task == "stop_any_task":
             last_task = tasks[-2].name
 
         tasks.append(Task(name=last_task))
