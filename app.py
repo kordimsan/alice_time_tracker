@@ -1,6 +1,8 @@
 import math
 from datetime import datetime, timedelta
 
+from dateutil.relativedelta import relativedelta
+
 from models.custom import Task
 from models.request import AliceRequest, UserState
 from models.response import Button, Response
@@ -11,7 +13,7 @@ sessionStorage = {}
 def handle_dialog(req: AliceRequest) -> tuple:
     if not req.state.user:
         return (
-            Response(text="Дима, что то не так с состоянием пользователя!"),
+            Response(text="Что то не так с состоянием пользователя!"),
             UserState(),
         )
 
@@ -37,7 +39,7 @@ def handle_dialog(req: AliceRequest) -> tuple:
             return (
                 Response(text=f"Задача {tasks[-2].name} остановлена!"),
                 UserState(tasks=tasks),
-        )
+            )
 
     if req.request.nlu.intents.resume_task:
         last_task = tasks[-1].name
@@ -70,7 +72,10 @@ def handle_dialog(req: AliceRequest) -> tuple:
             task_start = tasks_list[index]["date_time"]
             task_end = tasks_list[index + 1]["date_time"]
             task_time = task_end - task_start
-            if task_name != "stop_any_task":
+            if (
+                task_name != "stop_any_task"
+                and task_start > datetime.utcnow() - relativedelta(hours=24)
+            ):
                 task_times[task_name] = (
                     task_times.get(task_name, timedelta()) + task_time
                 )
