@@ -50,18 +50,14 @@ def handle_dialog(req: AliceRequest) -> tuple:
             UserState(tasks=tasks),
         )
 
-    if req.request.nlu.intents.result_task:
-        return (
-            Response(text="Результат задачи!"),
-            UserState(tasks=tasks),
-        )
+    
 
     if (
         req.request.nlu.intents.results
         or "результат" in req.request.original_utterance
         or "результат" in req.request.command
     ):
-        tasks_list = [t.dict() for t in tasks] + [
+        tasks_list = [t.dict() for t in tasks] + [                      #from here
             {"name": None, "date_time": datetime.utcnow()}
         ]
         task_times = {}
@@ -89,6 +85,27 @@ def handle_dialog(req: AliceRequest) -> tuple:
             Response(text=f"Ваши задачи: {', '.join(task_texts)}"),
             UserState(tasks=tasks),
         )
+    elif (
+        req.request.nlu.intents.result_task
+        or "результат последней задачи" in req.request.original_utterance
+        or "результат последней задачи" in req.request.command
+        ):
+        task_in_list = tasks[-1] + [                     
+            {"name": None, "date_time": datetime.utcnow()}
+        ]
+        task_in_time = {}
+        task_name = task_in_list["name"]
+        task_start = task_in_list["date_time"]
+        task_end = task_in_list[+ 1]["date_time"]
+        task_time = task_end - task_start
+        if task_name != "stop_any_task":
+                task_in_time[task_name] = (
+                    task_in_time.get(task_name, timedelta()) + task_time
+                )                                                                             #here i do
+        return (
+            Response(text=f"Результат задачи {task_name} {task_in_time}!"),
+            UserState(tasks=tasks),
+        )
 
     if req.session.new:
         return (
@@ -97,6 +114,7 @@ def handle_dialog(req: AliceRequest) -> tuple:
                 buttons=[
                     Button(title="Начинаю задачу"),
                     Button(title="Результат"),
+                    Button(title="Результат последней задачи"),
                 ],
             ),
             UserState(tasks=tasks),
