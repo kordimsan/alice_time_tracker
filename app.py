@@ -34,7 +34,7 @@ def handle_dialog(req: AliceRequest) -> tuple:
         )
         if best_match[1] >= 60:
             task_id = best_match[0]
-            task_name = next(filter(lambda task: task.id == task_id, tasks), None)
+            task_name = next(filter(lambda task: task.id == task_id, tasks), None).name
 
         tasks.append(Task(id=task_id, name=task_name))
         return (
