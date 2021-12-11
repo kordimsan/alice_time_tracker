@@ -2,17 +2,17 @@ from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 
+from models.custom import Task
+
 
 def _get_task_times(tasks):
-    tasks_list = [t.dict() for t in tasks] + [
-        {"_id": None, "name": None, "date_time": datetime.utcnow()}
-    ]
+    tasks_list = tasks + [Task()]
     task_times = {}
     for index in range(len(tasks_list) - 1):
-        task_id = tasks_list[index]["_id"]
-        task_name = tasks_list[index]["name"]
-        task_start = tasks_list[index]["date_time"]
-        task_end = tasks_list[index + 1]["date_time"]
+        task_id = tasks_list[index].id
+        task_name = tasks_list[index].name
+        task_start = tasks_list[index].date_time
+        task_end = tasks_list[index + 1].date_time
         task_time = (task_end - task_start).total_seconds()
         if (
             task_id != "stop_any_task"
