@@ -67,6 +67,12 @@ def handle_dialog(req: AliceRequest) -> tuple:
         or "результат" in req.request.command
     ):
         task_times = _get_task_times(tasks)
+        if not task_times:
+            return (
+                Response(text="Сегодня Вы ничего не делали!"),
+                UserState(tasks=tasks),
+            )
+
         task_texts = [
             (
                 f'{t["name"]} - {math.ceil(t["total_time"]/60)} '
@@ -81,6 +87,7 @@ def handle_dialog(req: AliceRequest) -> tuple:
             Response(text=f"Ваши задачи: {', '.join(task_texts)}"),
             UserState(tasks=tasks),
         )
+
     elif (
         req.request.nlu.intents.result_task
         or "результат последней задачи" in req.request.original_utterance
