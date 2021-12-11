@@ -3,6 +3,7 @@ from datetime import datetime
 
 import pymorphy2
 from dateutil.relativedelta import relativedelta
+from fuzzywuzzy import fuzz, process
 
 from models.custom import Task
 from models.request import AliceRequest, UserState
@@ -27,6 +28,14 @@ def handle_dialog(req: AliceRequest) -> tuple:
     if req.request.nlu.intents.add_task:
         task_name = req.request.nlu.intents.add_task.slots.task_name.value
         task_id = " ".join([morph.parse(w)[0].normal_form for w in task_name.split()])
+
+        best_match = process.extractOne(
+            task_id, [t.id for t in tasks], scorer=fuzz.WRatio
+        )
+        if best_match[1] >= 60:
+            task_id = best_match[0]
+            task_name = next(filter(lambda task: task.id == task_id, tasks), None)
+
         tasks.append(Task(id=task_id, name=task_name))
         return (
             Response(text=f"Задача {task_name} начата!"),
