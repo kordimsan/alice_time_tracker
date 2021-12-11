@@ -61,6 +61,25 @@ def handle_dialog(req: AliceRequest) -> tuple:
             UserState(tasks=tasks),
         )
 
+    if req.request.nlu.intents.help:
+        return (
+            Response(
+                text=(
+                    "Я могу отслеживать время задач над которыми вы работаете, "
+                    "просто скажи запусти задачу и кратко назови название задачи "
+                    "и я запомню время ее начала, затем можешь сказать останови "
+                    "или поставь на паузу текущую задачу, "
+                    "либо скажи что начинаешь новую задачу, "
+                    "я начну считать ее время."
+                ),
+                buttons=[
+                    Button(title="Начинаю задачу подготовка технического задания"),
+                    Button(title="Результат"),
+                ],
+            ),
+            UserState(tasks=tasks),
+        )
+
     if (
         req.request.nlu.intents.results
         or "результат" in req.request.original_utterance
@@ -115,9 +134,9 @@ def handle_dialog(req: AliceRequest) -> tuple:
     if req.session.new:
         return (
             Response(
-                text="Привет! Я виртуальный тайм-трекер!",
+                text="Привет! Я голосовой тайм-трекер!",
                 buttons=[
-                    Button(title="Начинаю задачу"),
+                    Button(title="Что ты умеешь?"),
                     Button(title="Результат"),
                     Button(title="Результат последней задачи"),
                 ],
@@ -127,16 +146,9 @@ def handle_dialog(req: AliceRequest) -> tuple:
 
     return (
         Response(
-            text=(
-                "Я могу отслеживать время задач над которыми вы работаете, "
-                "просто скажи запусти задачу и кратко назови название задачи "
-                "и я запомню время ее начала, затем можешь сказать останови "
-                "или поставь на паузу текущую задачу, "
-                "либо скажи что начинаешь новую задачу, "
-                "я начну считать ее время."
-            ),
+            text="Я не могу понять то что вы сказали!",
             buttons=[
-                Button(title="Начинаю задачу"),
+                Button(title="Помощь"),
                 Button(title="Результат"),
             ],
         ),

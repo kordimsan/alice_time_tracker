@@ -67,6 +67,7 @@ class Intents(BaseModel):
     result_task: Optional[IntentSlots]
     results: Optional[IntentSlots]
     resume_task: Optional[IntentSlots]
+    help: Optional[IntentSlots]
 
 
 class Nlu(BaseModel):
