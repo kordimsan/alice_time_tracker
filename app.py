@@ -20,12 +20,14 @@ sessionStorage = {}
 
 def handle_dialog(req: AliceRequest) -> tuple:
     tasks = req.state.user.tasks
-    tasks = [t for t in tasks if t.date_time >= datetime.utcnow() - relativedelta(hours=24)]
+    tasks = [
+        t for t in tasks if t.date_time >= datetime.utcnow() - relativedelta(hours=24)
+    ]
 
     if req.request.nlu.intents.add_task:
         task_name = req.request.nlu.intents.add_task.slots.task_name.value
         task_id = " ".join([morph.parse(w)[0].normal_form for w in task_name.split()])
-        tasks.append(Task(_id=task_id, name=task_name))
+        tasks.append(Task(id=task_id, name=task_name))
         return (
             Response(text=f"Задача {task_name} начата!"),
             UserState(tasks=tasks),
@@ -33,14 +35,14 @@ def handle_dialog(req: AliceRequest) -> tuple:
 
     if req.request.nlu.intents.pause_task:
         task_name = tasks[-1].name
-        task_id = tasks[-1]._id
+        task_id = tasks[-1].id
         if task_id == "stop_any_task":
             return (
                 Response(text=f"Задача {tasks[-2].name} уже остановлена!"),
                 UserState(tasks=tasks),
             )
         else:
-            tasks.append(Task(_id="stop_any_task"))
+            tasks.append(Task(id="stop_any_task"))
             return (
                 Response(text=f"Задача {tasks[-2].name} остановлена!"),
                 UserState(tasks=tasks),
@@ -48,12 +50,12 @@ def handle_dialog(req: AliceRequest) -> tuple:
 
     if req.request.nlu.intents.resume_task:
         last_task = tasks[-1].name
-        task_id = tasks[-1]._id
+        task_id = tasks[-1].id
         if task_id == "stop_any_task":
             last_task = tasks[-2].name
-            task_id = tasks[-2]._id
+            task_id = tasks[-2].id
 
-        tasks.append(Task(_id=task_id, name=last_task))
+        tasks.append(Task(id=task_id, name=last_task))
         return (
             Response(text=f"Продолжаем задачу {last_task}!"),
             UserState(tasks=tasks),
@@ -85,10 +87,10 @@ def handle_dialog(req: AliceRequest) -> tuple:
         or "результат последней задачи" in req.request.command
     ):
         last_task = tasks[-1].name
-        task_id = tasks[-1]._id
+        task_id = tasks[-1].id
         if task_id == "stop_any_task":
             last_task = tasks[-2].name
-            task_id = tasks[-2]._id
+            task_id = tasks[-2].id
 
         task_time = _get_task_times(tasks)[task_id]
         task_seconds = math.ceil(task_time["total_time"] / 60)
