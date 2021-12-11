@@ -7,7 +7,7 @@ from pydantic import BaseModel, validator
 
 
 class Task(BaseModel):
-    id: str
+    id: str = "stop_any_task"
     name: str = None
     date_time: datetime = None
 
