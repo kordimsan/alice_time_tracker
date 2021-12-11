@@ -9,20 +9,20 @@ from models.request import AliceRequest, UserState
 from models.response import Button, Response
 from services import _get_task_times, decl
 
-from datetime import datetime
-
-from dateutil.relativedelta import relativedelta
-
 morph = pymorphy2.MorphAnalyzer()
 
 sessionStorage = {}
 
 
 def handle_dialog(req: AliceRequest) -> tuple:
-    tasks = req.state.user.tasks
-    tasks = [
-        t for t in tasks if t.date_time >= datetime.utcnow() - relativedelta(hours=24)
-    ]
+    if not req.state.user:
+        tasks = []
+    else:
+        tasks = [
+            task
+            for task in req.state.user.tasks
+            if task.date_time >= datetime.utcnow() - relativedelta(hours=24)
+        ]
 
     if req.request.nlu.intents.add_task:
         task_name = req.request.nlu.intents.add_task.slots.task_name.value
