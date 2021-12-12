@@ -48,7 +48,7 @@ class Response(BaseModel):
 class AliceResponse(BaseModel):
     response: Response
     session: Session
-    session_state: Optional[dict]
+    session_state: Optional[UserState]
     user_state_update: Optional[UserState]
-    application_state: Optional[dict]
+    application_state: Optional[UserState]
     version: str

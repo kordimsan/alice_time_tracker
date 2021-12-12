@@ -26,6 +26,7 @@ async def main(request: AliceRequest = Body(...)):  # noqa
     return AliceResponse(
         response=response,
         session=request.session,
-        user_state_update=tasks,
+        session_state=tasks if not request.state.user else None,
+        user_state_update=tasks if request.state.user else None,
         version=request.version,
     )
