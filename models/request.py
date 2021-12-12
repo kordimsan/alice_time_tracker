@@ -89,9 +89,9 @@ class Request(BaseModel):
 
 
 class State(BaseModel):
-    session: Dict[str, Any]
+    session: Optional[UserState]
     user: Optional[UserState]
-    application: Dict[str, Any]
+    application: Optional[UserState]
 
 
 class AliceRequest(BaseModel):

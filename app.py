@@ -17,13 +17,15 @@ sessionStorage = {}
 
 def handle_dialog(req: AliceRequest) -> tuple:
     if not req.state.user:
-        tasks = []
+        tasks = req.state.session.tasks
     else:
-        tasks = [
-            task
-            for task in req.state.user.tasks
-            if task.date_time >= datetime.utcnow() - relativedelta(hours=24)
-        ]
+        tasks = req.state.user.tasks
+
+    tasks = [
+        task
+        for task in tasks
+        if task.date_time >= datetime.utcnow() - relativedelta(hours=24)
+    ]
 
     if req.request.nlu.intents.add_task:
         task_name = req.request.nlu.intents.add_task.slots.task_name.value
@@ -32,9 +34,12 @@ def handle_dialog(req: AliceRequest) -> tuple:
         best_match = process.extractOne(
             task_id, [t.id for t in tasks], scorer=fuzz.WRatio
         )
-        if best_match[1] >= 60:
-            task_id = best_match[0]
-            task_name = next(filter(lambda task: task.id == task_id, tasks), None).name
+        if best_match:
+            if best_match[1] >= 60:
+                task_id = best_match[0]
+                task_name = next(
+                    filter(lambda task: task.id == task_id, tasks), None
+                ).name
 
         tasks.append(Task(id=task_id, name=task_name))
         return (
