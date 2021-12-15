@@ -23,10 +23,19 @@ async def main(request: AliceRequest = Body(...)):  # noqa
 
     response, tasks = handle_dialog(request)
 
-    return AliceResponse(
-        response=response,
-        session=request.session,
-        session_state=tasks if not request.state.user else None,
-        user_state_update=tasks if request.state.user else None,
-        version=request.version,
-    )
+    if not request.state:
+        return AliceResponse(
+            response=response,
+            session=request.session,
+            session_state=[],
+            user_state_update=[],
+            version=request.version,
+        )
+    else:
+        return AliceResponse(
+            response=response,
+            session=request.session,
+            session_state=tasks if not request.state.user else None,
+            user_state_update=tasks if request.state.user else None,
+            version=request.version,
+        )

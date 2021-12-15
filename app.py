@@ -16,7 +16,9 @@ sessionStorage = {}
 
 
 def handle_dialog(req: AliceRequest) -> tuple:
-    if not req.state.user:
+    if not req.state:
+        tasks = []
+    elif not req.state.user:
         tasks = req.state.session.tasks
     else:
         tasks = req.state.user.tasks
