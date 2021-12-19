@@ -1,6 +1,7 @@
 # Alice Time Tracker
 
 # DEBUG in VSCODE
+
 ```
 {
   "version": "0.2.0",
@@ -16,3 +17,5 @@
   ]
 }
 ```
+
+# versions
