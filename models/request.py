@@ -54,7 +54,7 @@ class TaskName(BaseModel):
 
 
 class Slots(BaseModel):
-    task_name: Optional[TaskName]
+    task_name: TaskName
 
 
 class IntentSlots(BaseModel):
@@ -73,7 +73,7 @@ class Intents(BaseModel):
 class Nlu(BaseModel):
     tokens: List[str]
     entities: List
-    intents: Optional[Intents]
+    intents: Intents
 
 
 class Markup(BaseModel):
@@ -89,7 +89,7 @@ class Request(BaseModel):
 
 
 class State(BaseModel):
-    session: Optional[UserState]
+    session: UserState
     user: Optional[UserState]
     application: Optional[UserState]
 
